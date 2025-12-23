@@ -122,7 +122,7 @@ end)
 vim.o.breakindent = true
 
 -- Save undo history
-vim.o.undofile = true
+vim.o.undofile = false
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.o.ignorecase = true
@@ -216,6 +216,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.hl.on_yank()
+  end,
+})
+
+local mk_group = vim.api.nvim_create_augroup('MarkdownConceal', { clear = true })
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = mk_group,
+  pattern = 'markdown',
+  callback = function()
+    vim.opt_local.conceallevel = 2
+    vim.opt_local.concealcursor = 'nc'
   end,
 })
 
@@ -977,14 +988,14 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
