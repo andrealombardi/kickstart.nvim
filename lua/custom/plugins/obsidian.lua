@@ -1,16 +1,70 @@
 return {
   'obsidian-nvim/obsidian.nvim',
-  version = '*', -- recommended, use latest release instead of latest commit
+  version = '*',
   ft = 'markdown',
-  ---@module 'obsidian'
-  ---@type obsidian.config
+  dependencies = {
+    'nvim-lua/plenary.nvim',
+  },
+  keys = {
+    { '<leader>oo', '<cmd>Obsidian open<CR>', desc = 'Obsidian: Open in app' },
+    { '<leader>on', '<cmd>Obsidian new<CR>', desc = 'Obsidian: New note' },
+    { '<leader>ot', '<cmd>Obsidian template<CR>', desc = 'Obsidian: Insert template' },
+    { '<leader>od', '<cmd>Obsidian today<CR>', desc = 'Obsidian: Today' },
+    { '<leader>oy', '<cmd>Obsidian yesterday<CR>', desc = 'Obsidian: Yesterday' },
+    { '<leader>ob', '<cmd>Obsidian backlinks<CR>', desc = 'Obsidian: Backlinks' },
+    { '<leader>os', '<cmd>Obsidian search<CR>', desc = 'Obsidian: Search' },
+    { '<leader>ol', '<cmd>Obsidian links<CR>', desc = 'Obsidian: Links' },
+    { '<leader>op', '<cmd>Obsidian paste_img<CR>', desc = 'Obsidian: Paste Img' },
+    { '<leader>of', '<cmd>Obsidian follow_link vsplit<CR>', desc = 'Obsidian: Open Link vsplit' },
+  },
+
   opts = {
     legacy_commands = false, -- this will be removed in the next major release
     workspaces = {
       {
         name = 'personal',
-        path = '~/obsidian/obsvault',
+        path = vim.fn.expand '~/obsidian/obsvault',
       },
     },
+
+    -- notes_subdir = '00 - Inbox',
+    -- TEMP: disable subdir restriction to test whether link completion can see the full vault
+    notes_subdir = vim.NIL,
+
+    daily_notes = {
+      folder = '05 - Daily',
+      date_format = '%Y-%m-%d',
+      alias_format = '%B %-d, %Y',
+      template = 'daily.md',
+    },
+
+    templates = {
+      subdir = 'Templates',
+      date_format = '%Y-%m-%d',
+      time_format = '%H:%M',
+    },
+
+    preferred_link_style = 'wiki',
+    new_notes_location = 'notes_subdir',
+
+    completion = {
+      blink = true,
+      nvim_cmp = false,
+      min_chars = 1,
+    },
+
+    formatter_func = function(note)
+      local out = {
+        id = note.id,
+        aliases = note.aliases,
+        tags = note.tags,
+      }
+      if note.metadata and not vim.tbl_isempty(note.metadata) then
+        for k, v in pairs(note.metadata) do
+          out[k] = v
+        end
+      end
+      return out
+    end,
   },
 }
