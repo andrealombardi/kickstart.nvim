@@ -52,7 +52,7 @@ return {
     completion = {
       blink = true,
       nvim_cmp = false,
-      min_chars = 1,
+      min_chars = 2,
     },
 
     note_id_func = function(title)

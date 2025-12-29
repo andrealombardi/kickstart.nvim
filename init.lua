@@ -220,6 +220,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Note: The following is to support markdown in particular within the obsidian plugin
+-- This setup conceals the markup in normal mode, but it shows it in all the other modes
 local mk_group = vim.api.nvim_create_augroup('MarkdownConceal', { clear = true })
 
 vim.api.nvim_create_autocmd('FileType', {
@@ -227,7 +229,26 @@ vim.api.nvim_create_autocmd('FileType', {
   pattern = 'markdown',
   callback = function()
     vim.opt_local.conceallevel = 2
-    vim.opt_local.concealcursor = 'nc'
+    vim.opt_local.concealcursor = 'nc' --normal and command mode
+  end,
+})
+
+-- Mode-based toggle
+vim.api.nvim_create_autocmd('ModeChanged', {
+  group = mk_group,
+  pattern = '*',
+  callback = function()
+    -- Only apply to markdown buffers
+    if vim.bo.filetype ~= 'markdown' then
+      return
+    end
+
+    local mode = vim.fn.mode()
+    if mode == 'n' or mode == 'no' then
+      vim.opt_local.conceallevel = 2
+    else
+      vim.opt_local.conceallevel = 0
+    end
   end,
 })
 
