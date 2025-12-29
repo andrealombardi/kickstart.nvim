@@ -31,9 +31,7 @@ return {
       img_folder = '/Attachments',
     },
 
-    -- notes_subdir = '00 - Inbox',
-    -- TEMP: disable subdir restriction to test whether link completion can see the full vault
-    notes_subdir = vim.NIL,
+    notes_subdir = '00 - Inbox',
 
     daily_notes = {
       folder = '05 - Daily',
@@ -56,6 +54,23 @@ return {
       nvim_cmp = false,
       min_chars = 1,
     },
+
+    note_id_func = function(title)
+      local today = os.date '%Y-%m-%d'
+
+      -- Daily notes: title == today's date
+      if title == today then
+        return title
+      end
+
+      -- Normal notes: date + slug
+      local suffix = ''
+      if title then
+        suffix = '-' .. title:gsub(' ', '-'):lower()
+      end
+
+      return today .. suffix
+    end,
 
     formatter_func = function(note)
       local out = {
