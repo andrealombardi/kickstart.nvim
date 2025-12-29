@@ -27,6 +27,10 @@ return {
       },
     },
 
+    attachments = {
+      img_folder = '/Attachments',
+    },
+
     -- notes_subdir = '00 - Inbox',
     -- TEMP: disable subdir restriction to test whether link completion can see the full vault
     notes_subdir = vim.NIL,
